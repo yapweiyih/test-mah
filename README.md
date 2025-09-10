@@ -1,18 +1,63 @@
-
+## Deploy
 ```bash
 export PROJECT_ID=hello-world-418507
 gcloud config set project ${PROJECT_ID}
 
 # Option 1
-gcloud builds submit --tag gcr.io/${PROJECT_ID}/hello-fastapi
+gcloud builds submit --tag gcr.io/${PROJECT_ID}/hello-fastapi \
+  --gcs-source-staging-dir="gs://2025-cloudrun/staging"
+
+
 gcloud run deploy hello-fastapi \
   --image gcr.io/${PROJECT_ID}/hello-fastapi \
   --region us-central1 \
   --platform managed \
-  --allow-unauthenticated
+  --no-allow-unauthenticated
 
+gcloud run deploy hello-fastapi \
+--image=gcr.io/hello-world-418507/hello-fastapi \
+--no-allow-unauthenticated \
+--port=8080 \
+--service-account=671247654914-compute@developer.gserviceaccount.com \
+--region=us-central1 \
+--project=hello-world-418507
 
 # Option 2
-gcloud builds submit --config cloudbuild.yaml
+gcloud builds submit --config cloudbuild.yaml \
+  --gcs-source-staging-dir="gs://2025-cloudrun/staging"
 
 ```
+
+## Get URL
+```bash
+gcloud run services describe hello-fastapi \
+  --region=us-central1 \
+  --format='value(status.url)'
+```
+
+## Proxy
+```bash
+gcloud run services proxy hello-fastapi
+```
+
+## Test
+
+```bash
+curl https://hello-fastapi-671247654914.us-central1.run.app
+
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://hello-fastapi-671247654914.us-central1.run.app
+
+
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://hello-fastapi-2-671247654914.us-central1.run.app
+```
+
+## Delete
+```bash
+gcloud run services delete hello-fastapi
+```
+
+## Learning
+
+- When ingress=internal, the following services can access cloud run endpoint
+    - Compute engine (OK)
+    - Cloud Shell (404 error, cant see endpoint)
