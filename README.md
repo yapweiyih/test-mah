@@ -3,6 +3,8 @@
 export PROJECT_ID=hello-world-418507
 gcloud config set project ${PROJECT_ID}
 
+gcloud auth configure-docker
+
 # Option 1
 gcloud builds submit --tag gcr.io/${PROJECT_ID}/hello-fastapi \
   --gcs-source-staging-dir="gs://2025-cloudrun/staging"
@@ -29,8 +31,14 @@ gcloud builds submit --config cloudbuild.yaml \
 
 
 # Option 3
-docker build -t hello-fastapi-2 .
+export IMAGE_NAME=hello-fastapi
+export PROJECT_ID=hello-world-418507
 
+gcloud auth configure-docker
+
+docker build -t ${IMAGE_NAME} .
+docker tag ${IMAGE_NAME} gcr.io/${PROJECT_ID}/${IMAGE_NAME}
+docker push gcr.io/${PROJECT_ID}/${IMAGE_NAME}gst
 
 ```
 
@@ -50,11 +58,7 @@ gcloud run services proxy hello-fastapi
 
 ```bash
 curl https://hello-fastapi-671247654914.us-central1.run.app
-
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://hello-fastapi-671247654914.us-central1.run.app
-
-
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://hello-fastapi-2-671247654914.us-central1.run.app
 ```
 
 ## Delete
