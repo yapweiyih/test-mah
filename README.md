@@ -1,13 +1,13 @@
-## WIP
+## Artifact Registry - Docker type
 ```bash
 export PROJECT_ID=hello-world-418507
 export IMAGE_NAME=hello-fastapi
 export REPO=test-tobedeleted
+export REGION=us-central1
 
-docker tag ${IMAGE_NAME} ${REPO}/${PROJECT_ID}/${IMAGE_NAME}
-docker push ${REPO}/${PROJECT_ID}/${IMAGE_NAME}
+docker tag ${IMAGE_NAME} ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/${IMAGE_NAME}
+docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/${IMAGE_NAME}
 
-docker tag ${IMAGE_NAME} us-central1-docker.pkg.dev/hello-world-418507/test-tobedeleted/hello-fastapi
 ```
 
 ## Deploy
