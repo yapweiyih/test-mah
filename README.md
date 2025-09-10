@@ -1,12 +1,25 @@
 ## Artifact Registry - Docker type
 ```bash
-export PROJECT_ID=hello-world-418507
+export PROJECT_ID=sales-story-dev-dev-132499
 export IMAGE_NAME=hello-fastapi
-export REPO=test-tobedeleted
-export REGION=us-central1
+export REPO=cloud-run-source-deploy
+export REGION=asia-south1
 
+docker build -t ${IMAGE_NAME} .
 docker tag ${IMAGE_NAME} ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/${IMAGE_NAME}
 docker push ${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/${IMAGE_NAME}
+
+
+gcloud beta run deploy hello-fastapi \
+--image=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO}/${IMAGE_NAME}:latest \
+--no-allow-unauthenticated \
+--port=8080 \
+--service-account=571400153825-compute@developer.gserviceaccount.com \
+--network=projects/host-project-dev-env-mum/global/networks/shared-vpc-development-01 \
+--subnet=projects/host-project-dev-env-mum/regions/asia-south1/subnetworks/development-app-subnet-01 \
+--vpc-egress=private-ranges-only \
+--region=asia-south1 \
+--project=sales-story-dev-dev-132499
 
 ```
 
