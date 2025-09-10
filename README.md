@@ -1,3 +1,15 @@
+## WIP
+```bash
+export PROJECT_ID=hello-world-418507
+export IMAGE_NAME=hello-fastapi
+export REPO=test-tobedeleted
+
+docker tag ${IMAGE_NAME} ${REPO}/${PROJECT_ID}/${IMAGE_NAME}
+docker push ${REPO}/${PROJECT_ID}/${IMAGE_NAME}
+
+docker tag ${IMAGE_NAME} us-central1-docker.pkg.dev/hello-world-418507/test-tobedeleted/hello-fastapi
+```
+
 ## Deploy
 ```bash
 export PROJECT_ID=hello-world-418507
@@ -16,15 +28,6 @@ gcloud run deploy hello-fastapi \
   --platform managed \
   --no-allow-unauthenticated
 
-gcloud run deploy hello-fastapi \
---image=gcr.io/hello-world-418507/hello-fastapi \
---no-allow-unauthenticated \
---port=8080 \
---service-account=671247654914-compute@developer.gserviceaccount.com \
---region=us-central1 \
---egress=
---project=hello-world-418507
-
 # Option 2
 gcloud builds submit --config cloudbuild.yaml \
   --gcs-source-staging-dir="gs://2025-cloudrun/staging"
@@ -38,7 +41,7 @@ gcloud auth configure-docker
 
 docker build -t ${IMAGE_NAME} .
 docker tag ${IMAGE_NAME} gcr.io/${PROJECT_ID}/${IMAGE_NAME}
-docker push gcr.io/${PROJECT_ID}/${IMAGE_NAME}gst
+docker push gcr.io/${PROJECT_ID}/${IMAGE_NAME}
 
 ```
 
